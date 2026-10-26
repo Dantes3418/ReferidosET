@@ -164,7 +164,8 @@ async function del() {
 }
 
 // ===== WHATSAPP (mensaje automático + contador) =====
-const waLink = cel => 'https://wa.me/591' + cel + '?text=' + encodeURIComponent(WA_MSG);
+
+const waLink = cel => 'https://api.whatsapp.com/send?phone=591' + cel + '&text=' + encodeURIComponent(WA_MSG);
 function paintClicks(cel, n) {
   document.querySelectorAll('[data-wc]').forEach(el => { if (el.dataset.wc === cel) el.textContent = wtxt(n); });
 }
