@@ -5,7 +5,8 @@ const OBS = ['CON COBERTURA', 'SIN COBERTURA', 'FIN DE MES', 'SIGUIENTE MES', 'S
 const COL = { 'CON COBERTURA': '#10B981', 'SIN COBERTURA': '#EF4444', 'FIN DE MES': '#F59E0B', 'SIGUIENTE MES': '#22B8E8', 'SIN COB. EN ESPERA...': '#7A7394', 'CERRADO': '#6D3FD1', 'OTRO': '#C4B5FD' };
 
 // Mensaje que se escribe solo al abrir WhatsApp (edítalo a tu gusto)
-const WA_MSG = '¡Hola! 👋😊 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶 ¡Estoy aquí para ayudarle a tener el internet que su hogar necesita! 🏠✨  ';
+
+const WA_MSG = '¡Hola! 👋😄 ¿Cómo está?\n\nLe saluda su asesor de Internet Hogar Entel 📶. ¡Espero que esté teniendo un excelente día!\n\nLe escribo porque conversamos recientemente acerca de los planes de internet para su hogar 🏠';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
