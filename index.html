@@ -14,17 +14,16 @@
 
 <div id="app" hidden>
 <header><img src="entel.png" alt=""><div><b id="h-name"></b><small id="h-sync"></small></div>
-  <button class="ico" id="b-sync" aria-label="Actualizar">⟳</button><button class="ico" id="b-out" aria-label="Salir">⎋</button></header>
+  <button class="ico" id="b-sync" aria-label="Actualizar"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg></button><button class="ico" id="b-out" aria-label="Salir"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button></header>
 <main>
   <div id="pend" class="pendbar" hidden></div>
   <section id="v-reg" class="view on">
     <form id="f" class="panel"><h2 id="f-title">Nuevo referido</h2>
       <label>Celular<input id="cel" inputmode="numeric" maxlength="12" placeholder="Ej. 70012345" required></label>
       <label>Nombre<input id="nom" placeholder="Nombre del cliente" autocomplete="off" ></label>
-      <div class="lb">Plan</div><div id="plan" class="chips"></div>
-      <label>Observación<select id="obs"></select></label>
-      <input id="obs2" placeholder="Escribe el detalle" maxlength="100" hidden>
-      <label>Coordenadas<div class="row"><input id="coo" placeholder="-16.50000,-68.15000" ><button type="button" id="b-gps" class="btn ghost">📍 GPS</button></div></label>
+      <div class="lb">Estado</div><div id="est" class="states"></div>
+      <label>Observación<textarea id="obs" maxlength="300" rows="3" placeholder="Mensaje o detalle a recordar (opcional)"></textarea></label>
+      <label>Coordenadas<div class="row"><input id="coo" placeholder="-16.50000,-68.15000" ><button type="button" id="b-gps" class="btn ghost"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>GPS</button></div></label>
       <button class="btn big" id="b-save">Guardar referido</button>
       <div class="row ed"><button type="button" id="b-cancel" class="btn ghost" hidden>Cancelar</button><button type="button" id="b-del" class="btn danger ad" hidden>Eliminar</button></div>
     </form>
@@ -34,23 +33,22 @@
     <div id="pq"></div>
     <div class="filters"><input id="q" type="search" placeholder="Buscar nombre o celular">
       <div class="row"><select id="fo"></select><select id="fp"></select></div><select id="fv" class="ad"></select>
-      <select id="fd"><option value="todas">📅 Todas las fechas</option><option value="hoy">Hoy</option><option value="semana">Esta semana (desde el lunes)</option><option value="mes">Este mes</option><option value="rango">Rango de fechas…</option></select>
+      <select id="fd"><option value="todas">Todas las fechas</option><option value="hoy">Hoy</option><option value="semana">Esta semana (desde el lunes)</option><option value="mes">Este mes</option><option value="rango">Rango de fechas…</option></select>
       <div id="rango" class="row" hidden><label>Desde<input type="date" id="d1"></label><label>Hasta<input type="date" id="d2"></label></div></div>
     <div id="l-count" class="muted"></div><div id="cards"></div>
   </section>
 
   <section id="v-stats" class="view">
-    <div class="row"><select id="per"><option value="hoy">Hoy</option><option value="7">Últimos 7 días</option><option value="mes" selected>Este mes</option><option value="todo">Todo</option></select><select id="sv" class="ad"></select></div>
+    <div class="row"><select id="per"><option value="hoy">Hoy</option><option value="7">Últimos 7 días</option><option value="mes" selected>Este mes</option><option value="todo">Todo</option><option value="rango">Rango de fechas…</option></select><select id="sv" class="ad"></select></div>
+    <div id="srango" class="row" hidden><label>Desde<input type="date" id="s1"></label><label>Hasta<input type="date" id="s2"></label></div>
     <div id="kpis" class="kpis"></div>
     <div class="grid">
-      <div class="card"><h3>Estado de observaciones</h3><div class="ch"><canvas id="c-obs"></canvas></div></div>
-      <div class="card"><h3>Registros últimos 30 días</h3><div class="ch"><canvas id="c-dia"></canvas></div></div>
-      <div class="card"><h3>Registros por plan</h3><div class="ch"><canvas id="c-plan"></canvas></div></div>
+      <div class="card"><h3>Registros por día</h3><div class="ch"><canvas id="c-dia"></canvas></div></div>
       <div class="card ad" id="w-ven"><h3>Rendimiento por vendedor</h3><div class="ch"><canvas id="c-ven"></canvas></div><div id="rk" class="rk"></div></div>
     </div>
   </section>
 </main>
-<nav><button data-v="reg" class="on"><span>➕</span>Registrar</button><button data-v="list"><span>📋</span><i id="n-list">Mis referidos</i></button><button data-v="stats"><span>📊</span>Estadísticas</button></nav>
+<nav><button data-v="reg" class="on"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Registrar</button><button data-v="list"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg><i id="n-list">Mis referidos</i></button><button data-v="stats"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20v-8M12 20V5M19 20v-11"/></svg>Estadísticas</button></nav>
 </div>
 <div id="toast"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
