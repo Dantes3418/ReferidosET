@@ -95,18 +95,18 @@ label,.lb{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:
 
 /* ===== Estado (selector de colores) ===== */
 .states{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.st{min-height:46px;padding:6px 12px;display:flex;align-items:center;gap:9px;text-align:left;line-height:1.15;font-size:17px;font-weight:700;color:var(--tx);background:#fff;border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.st{min-height:46px;padding:6px 12px;display:flex;align-items:center;gap:9px;text-align:left;line-height:1.15;font-size:13px;font-weight:700;color:var(--tx);background:#fff;border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
 .st::before{content:"";flex:none;width:12px;height:12px;border-radius:50%;background:var(--c)}
 .st.on{background:var(--c);border-color:var(--c);color:#fff}
 .st.on::before{background:#fff}
-textarea{width:100%;min-height:84px;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--tx);font:inherit;font-size:16px;line-height:1.4;resize:vertical;outline:none}
+textarea{width:100%;min-height:55px;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--tx);font:inherit;font-size:16px;line-height:1.4;resize:none;outline:none}
 textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(109,63,209,.14)}
 @media(min-width:600px){.states{grid-template-columns:repeat(3,1fr)}}
 
 /* ===== Tarjetas: número, OJO y observación ===== */
 
 
-
+  
 
 /* ===== Íconos ===== */
 .i{width:18px;height:18px;flex:none}
