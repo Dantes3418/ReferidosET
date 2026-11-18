@@ -1,5 +1,5 @@
 // ===== CONFIGURACIÓN =====
-const API = 'https://script.google.com/macros/s/AKfycbzUOkd_KWyL0_LAHKAL7qp1jf5_dMk160rScbUeHsK1MAaR-qc_37ZMhXxYTE8POGD8oA/exec';
+const API = 'https://script.google.com/macros/s/AKfycbxO-iJ7O7_8zl56Yr3QXDFiqzWngiD_lQpNWe1MWh7GvUUtv6X8BCcHnflZUC-_nPX4ZQ/exec';
 const PLANES = ['SIMPLE', 'DOBLE', 'TRIPLE'];
 const OBS = ['CON COBERTURA', 'SIN COBERTURA', 'FIN DE MES', 'SIGUIENTE MES', 'SIN COB. EN ESPERA...', 'CERRADO'];
 const COL = { 'CON COBERTURA': '#10B981', 'SIN COBERTURA': '#EF4444', 'FIN DE MES': '#F59E0B', 'SIGUIENTE MES': '#22B8E8', 'SIN COB. EN ESPERA...': '#7A7394', 'CERRADO': '#6D3FD1', 'OTRO': '#C4B5FD' };
