@@ -2,8 +2,8 @@
 const API = 'https://script.google.com/macros/s/AKfycbwfQzd1WGCSAhJatsvmSHNfpimFSs2hOGpKLvKv_9Pw7x-eMM6KotJuA_Smic9RXnB5Eg/exec';
 // Estados (el texto guardado en la hoja) · color · nombre que se ve en pantalla
 const ESTADOS = ['CON COBERTURA', 'SIN COBERTURA', 'SIN COB. EN ESPERA...', 'FIN DE MES', 'SIGUIENTE MES', 'CERRADO','NS/NR'];
-const COL = { 'CON COBERTURA': '#00b85c', 'SIN COBERTURA': '#db0000fd', 'SIN COB. EN ESPERA...': '#b40078', 'FIN DE MES': '#F97316', 'SIGUIENTE MES': '#0EA5E9', 'CERRADO': '#111111','NS/NR': '#B8B4C8', 'SIN ESTADO': '#B8B4C8' };
-const LBL = { 'CON COBERTURA': 'Con cobertura', 'SIN COBERTURA': 'Sin cobertura', 'SIN COB. EN ESPERA...': 'Sin cob. en espera...', 'FIN DE MES': 'Fin de mes', 'SIGUIENTE MES': 'Siguiente mes', 'CERRADO': 'Cerrado','NS/NR': 'Ns/Nr', 'SIN ESTADO': 'Sin estado' };
+const COL = { 'CON COBERTURA': '#00b85c', 'SIN COBERTURA': '#e20000fd', 'SIN COB. EN ESPERA...': '#ff02ab', 'FIN DE MES': '#f0aa42', 'SIGUIENTE MES': '#0EA5E9', 'CERRADO': '#111111','NS/NR': '#B8B4C8', 'SIN ESTADO': '#B8B4C8' };
+const LBL = { 'CON COBERTURA': 'CON COBERTURA', 'SIN COBERTURA': 'SIN COBERTURA', 'SIN COB. EN ESPERA...': 'SIN COB. EN ESPERA...', 'FIN DE MES': 'FIN DE MES', 'SIGUIENTE MES': 'SIGUIENTE MES', 'CERRADO': 'CERRADO','NS/NR': 'NS/NR', 'SIN ESTADO': 'Sin estado' };
 
 // Mensaje que se escribe solo al abrir WhatsApp (edítalo a tu gusto)
 const WA_MSG = '¡Hola! 👋😊 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶 ¡Estoy aquí para ayudarle a tener el internet que su hogar necesita! 🏠✨  ';
@@ -18,6 +18,7 @@ const IC = {
   wa: ic('<path d="M3 21l1.7-5A9 9 0 1 1 8 19.3L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a3.5 3.5 0 0 1-1.8-1.8l.8-1-1-2L9 9.5z"/>'),
   edit: ic('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'),
   trash: ic('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),
+  copy: ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>'),
   flag: ic('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>')
 };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -229,20 +230,19 @@ function buildFilters() {
 }
 
 const card = (d, i) => {
-  const coord = String(d.coord ?? '').trim().replace(/^-$/, ''), n = d.clicks || 0, obs = String(d.obs ?? '').trim();
+  const dash = v => { v = String(v ?? '').trim(); return v === '-' ? '' : v; };
+  const coord = dash(d.coord), obs = dash(d.obs), n = d.clicks || 0;
   return `<div class="card cd${d.ojo ? ' eye' : ''}${OPEN.has(d.celular) ? ' open' : ''}" data-k="${esc(d.celular)}">
     <div class="sum" data-t>
       <div class="top"><span class="nb">${i}</span>
-        <div class="who"><b>${esc(d.nombre)}</b><span class="num">${IC.phone}${esc(d.celular)}</span></div>
-        ${d.ojo ? '<span class="pri">OJO</span>' : ''}<span class="chev">${IC.chev}</span></div>
-      <div class="stb" style="--c:${COL[ok(d)]}"><span class="lab">Estado: </span><span class="sv"><i class="dot"></i>${LBL[ok(d)]}</span></div>
-      ${obs ? `<div class="fld"><span class="lab">Observaciones</span><p class="ob">${esc(obs)}</p></div>` : ''}
-      ${coord ? `<div class="loc"><div class="lh">${IC.pin}<b>Ubicación</b><button type="button" class="cp" data-copy="${esc(coord)}" aria-label="Copiar coordenadas">Copiar</button></div><span>${esc(coord)}</span></div>` : ''}
+        <div class="who"><b>${esc(d.nombre)}</b><span class="num">${IC.phone}${esc(d.celular)}${d.ojo ? '<span class="pri">OJO</span>' : ''}</span></div>
+        <span class="stp" style="--c:${COL[ok(d)]}"><i class="dot"></i>${esc(LBL[ok(d)])}</span><span class="chev">${IC.chev}</span></div>
+      <div class="On"><span class="tg">OBS:</span><span class="ob${obs ? '' : ' nil'}">${obs ? esc(obs) : '-'}</span></div>
+      <div class="ln">${IC.pin}<span class="tg">Ubi:</span><span class="co${coord ? '' : ' nil'}">${coord ? esc(coord) : '-'}</span>${coord ? `<button type="button" class="cp" data-copy="${esc(coord)}" aria-label="Copiar coordenadas">${IC.copy}Copiar</button>` : ''}</div>
       <div class="wrow"><a class="wa" data-wa="${esc(d.celular)}" target="_blank" rel="noopener" href="${waLink(esc(d.celular))}"><img src="whatsapp.png" class="wa-logo" alt="">WhatsApp</a><span class="wc" data-wc="${esc(d.celular)}">${wtxt(n)}</span></div>
     </div>
     <div class="more">
       <div class="ft"><div><span class="lab">Fecha de registro</span><span>${hm(d.fecha)}</span></div><div><span class="lab">Registrado por</span><span>${esc(who(d.user))}</span></div></div>
-      
       <div class="acts"><button type="button" class="eyeb${d.ojo ? ' on' : ''}" data-eye="${esc(d.celular)}">${d.ojo ? 'Quitar OJO' : 'Marcar con OJO'}</button><button type="button" class="prim" data-e="${d.row}">Editar registro</button></div>
     </div>
   </div>`;
