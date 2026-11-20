@@ -6,7 +6,7 @@ const COL = { 'CON COBERTURA': '#00b85c', 'SIN COBERTURA': '#e20000fd', 'SIN COB
 const LBL = { 'CON COBERTURA': 'CON COBERTURA', 'SIN COBERTURA': 'SIN COBERTURA', 'SIN COB. EN ESPERA...': 'SIN COB. EN ESPERA...', 'FIN DE MES': 'FIN DE MES', 'SIGUIENTE MES': 'SIGUIENTE MES', 'CERRADO': 'CERRADO','NS/NR': 'NS/NR', 'SIN ESTADO': 'Sin estado' };
 
 // Mensaje que se escribe solo al abrir WhatsApp (edítalo a tu gusto)
-const WA_MSG = '¡Hola! 👋😊 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶 ¡Estoy aquí para ayudarle a tener el internet que su hogar necesita! 🏠✨  ';
+const WA_MSG = ' ¡Hola! 👋😄 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶 Le escribo porque conversamos recientemente acerca de los planes de internet para su hogar 🏠 ';
 
 const $ = id => document.getElementById(id);
 // Íconos de línea (reemplazan a los emoticones)
