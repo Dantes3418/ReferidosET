@@ -1,4 +1,4 @@
-:root{--p:#6D3FD1;--pd:#4B2799;--ps:#F1EBFC;--cy:#22B8E8;--bg:#F7F5FD;--tx:#241B3D;--mu:#5b5085;--bd:#E3DDF3;--rd:#EF4444;--r:16px;--sh:0 8px 28px rgba(109,63,209,.09)}
+:root{--p:#6D3FD1;--pd:#4B2799;--ps:#F1EBFC;--cy:#22B8E8;--bg:#F7F5FD;--tx:#241B3D;--mu:#7A7394;--bd:#E3DDF3;--rd:#EF4444;--r:16px;--sh:0 8px 28px rgba(109,63,209,.09)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;font-size:15px}
@@ -99,14 +99,14 @@ label,.lb{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:
 .st::before{content:"";flex:none;width:12px;height:12px;border-radius:50%;background:var(--c)}
 .st.on{background:var(--c);border-color:var(--c);color:#fff}
 .st.on::before{background:#fff}
-textarea{width:100%;min-height:55px;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--tx);font:inherit;font-size:16px;line-height:1.4;resize:none;outline:none}
+textarea{width:100%;min-height:84px;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--tx);font:inherit;font-size:16px;line-height:1.4;resize:vertical;outline:none}
 textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(109,63,209,.14)}
 @media(min-width:600px){.states{grid-template-columns:repeat(3,1fr)}}
 
 /* ===== Tarjetas: número, OJO y observación ===== */
 
 
-  
+
 
 /* ===== Íconos ===== */
 .i{width:18px;height:18px;flex:none}
@@ -132,9 +132,9 @@ nav svg{width:22px;height:22px}
 .cd.open .chev{transform:rotate(180deg)}
 .lab{display:block;font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mu)}
 .cd.open .wrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.wa{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 7px;border-radius:12px;background:#003d16;border:1.3px solid #004917;color:#effaf3;font-weight:700;font-size:14px;text-decoration:none;transition:background .15s,transform .1s}
-.wa:active{background:#D5F5E0;transform:scale(.96)}
-.wa .wa-logo{width:17px;height:17px}
+.wa{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px 0 12px;border-radius:12px;background:#004116;border:1px solid #effff4;color:#deffeb;font-weight:700;font-size:14px;text-decoration:none;transition:background .15s,transform .1s}
+.wa:active{background:#D5F5E0;transform:scale(.98)}
+.wa .wa-logo{width:22px;height:22px}
 .wc{font-size:12px;color:var(--mu)}
 .more{padding:0 14px 14px;border-top:1px solid var(--bd);margin:0 14px;padding:14px 0 14px}
 .ft{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -155,20 +155,81 @@ nav svg{width:22px;height:22px}
 .pri{flex:none;font-size:10px;font-weight:800;color:#92400E;background:#FEF3C7;border-radius:99px;padding:1px 7px}
 .stp{flex:none;max-width:130px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;line-height:1.15;text-transform:uppercase;color:color-mix(in srgb,var(--c) 80%,#000);background:color-mix(in srgb,var(--c) 10%,#fff);border-radius:12px;padding:6px 10px}
 .stp .dot{width:8px;height:8px}
-.On{display:flex;align-items:center;gap:6px;min-height:36px;padding:4px 9px;margin-bottom:9px;background:#fffef8;border:1.9px solid #fcf9e9;border-radius:15px;color:var(--p)}
-.On .i{width:14px;height:14px}
-.ln{display:flex;align-items:center;gap:7px;min-height:38px;padding:5px 10px;margin-bottom:8px;background:#e8dfff;border:1.9px solid #c1a5fd;border-radius:10px;color:var(--p)}
+.ln{display:flex;align-items:center;gap:7px;min-height:38px;padding:5px 10px;margin-bottom:8px;background:#F8F6FD;border:1.5px solid #C9B6F2;border-radius:10px;color:var(--p)}
 .ln .i{width:16px;height:16px}
-.tg{flex:none;font-size:12px;font-weight:800;color:#000000}
-.ob,.co{flex:1;min-width:0;font-size:13px;color:#1c005e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.os{display:flex;align-items:center;gap:7px;min-height:38px;padding:5px 10px;margin-bottom:8px;background:#fffdf6;border:1.5px solid #f2f1b6;border-radius:10px;color:var(--p)}
+
+.tg{flex:none;font-size:12px;font-weight:800;color:var(--mu)}
+.ob,.co{flex:1;min-width:0;font-size:13px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nil{color:var(--mu)}
 .cd.open .ob{white-space:pre-wrap;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
-.cd.open .ln:has(.ob){align-items:flex-start;padding-top:9px;padding-bottom:9px}
-.cp{flex:none;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border:1.5px solid var(--p);border-radius:8px;background:#6614ff;color:var(--bg);font-size:12px;font-weight:700;cursor:pointer}
+.cd.open .os:has(.ob){align-items:flex-start;padding-top:9px;padding-bottom:9px}
+.cp{flex:none;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border:1.5px solid var(--p);border-radius:8px;background:#fff;color:var(--p);font-size:12px;font-weight:700;cursor:pointer}
 .cp .i{width:13px;height:13px}
 .cp:active{background:var(--ps)}
 .cd .wrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-right:10px;margin:0}
 .cd .wa{height:40px}
 .cd .wc{white-space:nowrap;text-align:right;line-height:1;font-size:12px;font-weight:600;color:var(--mu)}
 
+/* ===== Plan (opcional) y Estado (desplegable) ===== */
+.opt{font-weight:500;opacity:.7}
+.plans{display:flex;gap:8px;margin-bottom:12px}
+.pl{flex:0 0 auto;min-width:76px;height:36px;padding:0 14px;font-size:13px;font-weight:700;color:var(--tx);background:#fff;border:1.5px solid var(--bd);border-radius:18px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.pl.on{background:var(--p);border-color:var(--p);color:#fff}
+.plt{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--pd);background:var(--ps);border-radius:6px;padding:2px 6px}
 
+
+/* ===== CAMPO DE OBSERVACIONES ===== */
+#obs {
+    resize: none;          /* Evita cambiar el tamaño manualmente */
+    font-size: 13px;       /* Texto más pequeño */
+    line-height: 1.4;
+    min-height: 58px;
+    height: 40px;
+    padding: 9px 11px;
+    overflow-y: auto;      /* Permite desplazarse si hay mucho texto */
+}
+
+/* ===== FORMULARIO MÁS COMPACTO ===== */
+
+/* Reducir separación entre los elementos del formulario */
+#f {
+    gap: 10px;
+}
+
+/* Títulos de los campos */
+#f label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Campos de entrada */
+#f input,
+#f select,
+#f textarea {
+    margin-top: 0;
+    font-size: 13px;
+}
+
+/* Reducir altura de los campos */
+#f input,
+#f select {
+    min-height: 38px;
+    padding: 8px 11px;
+}
+
+/* Plan */
+#f .lb {
+    margin-bottom: -4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Botones */
+#f .big {
+    margin-top: 4px;
+}
