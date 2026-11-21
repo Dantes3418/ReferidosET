@@ -1,12 +1,13 @@
 // ===== CONFIGURACIÓN =====
-const API = 'https://script.google.com/macros/s/AKfycbwfQzd1WGCSAhJatsvmSHNfpimFSs2hOGpKLvKv_9Pw7x-eMM6KotJuA_Smic9RXnB5Eg/exec';
+const API = 'https://script.google.com/macros/s/AKfycbyOOThHmI5SoqHaO6zAfdjjraYIC85Xm40T9TAUGa5sOOJRS7rKI8HFRZARhuQUq1j3Ng/exec';
 // Estados (el texto guardado en la hoja) · color · nombre que se ve en pantalla
-const ESTADOS = ['CON COBERTURA', 'SIN COBERTURA', 'SIN COB. EN ESPERA...', 'FIN DE MES', 'SIGUIENTE MES', 'CERRADO','NS/NR'];
-const COL = { 'CON COBERTURA': '#00b85c', 'SIN COBERTURA': '#e20000fd', 'SIN COB. EN ESPERA...': '#ff02ab', 'FIN DE MES': '#f0aa42', 'SIGUIENTE MES': '#0EA5E9', 'CERRADO': '#111111','NS/NR': '#B8B4C8', 'SIN ESTADO': '#B8B4C8' };
-const LBL = { 'CON COBERTURA': 'CON COBERTURA', 'SIN COBERTURA': 'SIN COBERTURA', 'SIN COB. EN ESPERA...': 'SIN COB. EN ESPERA...', 'FIN DE MES': 'FIN DE MES', 'SIGUIENTE MES': 'SIGUIENTE MES', 'CERRADO': 'CERRADO','NS/NR': 'NS/NR', 'SIN ESTADO': 'Sin estado' };
+const ESTADOS = ['CON COBERTURA', 'SIN COBERTURA', 'SIN COB. EN ESPERA...', 'FIN DE MES', 'SIGUIENTE MES', 'CERRADO'];
+const PLANES = ['Simple', 'Doble', 'Triple'];
+const COL = { 'CON COBERTURA': '#00b85c', 'SIN COBERTURA': '#db0000fd', 'SIN COB. EN ESPERA...': '#b40078', 'FIN DE MES': '#F97316', 'SIGUIENTE MES': '#0EA5E9', 'CERRADO': '#111111', 'SIN ESTADO': '#B8B4C8' };
+const LBL = { 'CON COBERTURA': 'CON COBERTURA', 'SIN COBERTURA': 'SIN COBERTURA', 'SIN COB. EN ESPERA...': 'SIN COB. EN ESPERA...', 'FIN DE MES': 'FIN DE MES', 'SIGUIENTE MES': 'SIGUIENTE MES', 'CERRADO': 'CERRADO', 'SIN ESTADO': 'Sin estado' };
 
 // Mensaje que se escribe solo al abrir WhatsApp (edítalo a tu gusto)
-const WA_MSG = ' ¡Hola! 👋😄 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶 Le escribo porque conversamos recientemente acerca de los planes de internet para su hogar 🏠 ';
+const WA_MSG = '¡Hola! 👋😄 ¿Cómo está? Le saluda su asesor de Internet Hogar Entel 📶\n\nLe escribo porque conversamos recientemente acerca de los planes de internet para su hogar 🏠';
 
 const $ = id => document.getElementById(id);
 // Íconos de línea (reemplazan a los emoticones)
@@ -28,7 +29,7 @@ const W = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 // Q = referidos en espera (sin internet) · QW = clics de WhatsApp pendientes de contar
 // Q = referidos en espera · QW = clics de WhatsApp pendientes · QE = marcas de OJO pendientes
 let S = J('sess', null), D = J('data', []), NAMES = J('names', {}), Q = J('queue', []), QW = J('waq', []), QE = J('eyeq', []);
-let edit = null, qedit = null, est = '', cur = 'reg', CH = {}, flushing = false;
+let edit = null, qedit = null, plan = '', cur = 'reg', CH = {}, flushing = false;
 const OPEN = new Set(); // tarjetas desplegadas (por celular)
 
 const adm = () => S && S.user === 'A';
@@ -90,16 +91,19 @@ async function load() {
 
 // ===== REGISTRO =====
 function buildForm() {
-  $('est').innerHTML = ESTADOS.map(e => `<button type="button" class="st" data-s="${esc(e)}" style="--c:${COL[e]}">${LBL[e]}</button>`).join('');
+  $('est').innerHTML = '<option value="">Sin estado</option>' + ESTADOS.map(e => `<option value="${esc(e)}">${esc(LBL[e])}</option>`).join('');
+  $('plan').innerHTML = PLANES.map(p => `<button type="button" class="pl" data-p="${p}">${p}</button>`).join('');
 }
-function setEst(e) { est = e; document.querySelectorAll('.st').forEach(c => c.classList.toggle('on', c.dataset.s === e)); }
+// Plan opcional: al tocar el que ya está marcado, se desmarca
+function setPlan(p) { plan = p; document.querySelectorAll('.pl').forEach(c => c.classList.toggle('on', c.dataset.p === p)); }
+function setEst(e) { $('est').value = ESTADOS.includes(e) ? e : ''; }
 function resetForm() {
-  $('f').reset(); setEst(''); edit = null; qedit = null;
+  $('f').reset(); setEst(''); setPlan(''); edit = null; qedit = null;
   $('f-title').textContent = 'Nuevo referido'; $('b-save').textContent = 'Guardar referido';
   $('b-cancel').hidden = $('b-del').hidden = true;
 }
-function fillForm(cel, nom, estado, obs, coo) {
-  $('cel').value = cel; $('nom').value = nom; setEst(estado); $('obs').value = obs || ''; $('coo').value = coo;
+function fillForm(cel, nom, estado, obs, coo, pl) {
+  $('cel').value = cel; $('nom').value = nom; setEst(estado); setPlan(pl || ''); $('obs').value = obs || ''; $('coo').value = coo;
 }
 function parseCoo(s) { const m = String(s || '').match(/(-?\d{1,3}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/); return m ? m[1] + ',' + m[2] : String(s || '').trim(); }
 function gps() {
@@ -116,13 +120,12 @@ const normCel = v => { let c = String(v || '').replace(/\D/g, ''); if (c.length 
 function applySaved(r) {
   if (r.data) { D = r.data; return; }
   if (r.item) { D = D.filter(x => x.celular !== r.item.celular); D.push(r.item); }
-  else if (r.upd) { const d = D.find(x => x.row === r.upd.row); if (d) { d.celular = r.upd.celular; d.nombre = r.upd.nombre; d.estado = r.upd.estado; d.obs = r.upd.obs; d.coord = r.upd.coord; } }
+  else if (r.upd) { const d = D.find(x => x.row === r.upd.row); if (d) { d.celular = r.upd.celular; d.nombre = r.upd.nombre; d.estado = r.upd.estado; d.plan = r.upd.plan; d.obs = r.upd.obs; d.coord = r.upd.coord; } }
 }
 
 async function submit(ev) {
   ev.preventDefault();
-  if (!est) return toast('Elige un estado', 'err');
-  const reg = { celular: $('cel').value, nombre: $('nom').value, estado: est, observacion: $('obs').value.trim(), coordenadas: parseCoo($('coo').value) };
+  const reg = { celular: $('cel').value, nombre: $('nom').value, plan, estado: $('est').value, observacion: $('obs').value.trim(), coordenadas: parseCoo($('coo').value) };
   if (edit) {
     const b = $('b-save'); b.disabled = true;
     try {
@@ -172,14 +175,14 @@ async function flush(quiet) {
 
 function startEdit(row) {
   const d = D.find(x => x.row === row); if (!d) return;
-  resetForm(); edit = row; fillForm(d.celular, d.nombre, d.estado, d.obs, d.coord);
+  resetForm(); edit = row; fillForm(d.celular, d.nombre, d.estado, d.obs, d.coord, d.plan);
   $('f-title').textContent = 'Editar referido'; $('b-save').textContent = 'Guardar cambios';
   $('b-cancel').hidden = false; $('b-del').hidden = !adm(); nav('reg');
 }
 function startEditQ(ts) {
   const q = Q.find(x => x.ts === ts); if (!q) return;
   resetForm(); qedit = ts; const r = q.reg;
-  fillForm(r.celular, r.nombre, r.estado, r.observacion, r.coordenadas);
+  fillForm(r.celular, r.nombre, r.estado, r.observacion, r.coordenadas, r.plan);
   $('f-title').textContent = 'Editar referido en espera'; $('b-save').textContent = 'Guardar';
   $('b-cancel').hidden = false; nav('reg');
 }
@@ -225,7 +228,7 @@ function toggleEye(cel) {
 // ===== LISTA =====
 function buildFilters() {
   const o = (id, h, a) => { const s = $(id), v = s.value; s.innerHTML = `<option value="todos">${h}</option>` + a.map(([k, t]) => `<option value="${esc(k)}">${esc(t)}</option>`).join(''); if ([...s.options].some(x => x.value === v)) s.value = v; };
-  o('fo', 'Todos los estados', ESTADOS.map(x => [x, LBL[x]])); o('fp', 'Todos', [['si', 'Solo con OJO']]);
+  o('fo', 'Todos los estados', [...ESTADOS, 'SIN ESTADO'].map(x => [x, LBL[x]])); o('fp', 'Todos', [['si', 'Solo con OJO']]);
   if (adm()) ['fv', 'sv'].forEach(id => o(id, 'Todos los vendedores', Object.keys(NAMES).map(u => [u, who(u)])));
 }
 
@@ -235,9 +238,9 @@ const card = (d, i) => {
   return `<div class="card cd${d.ojo ? ' eye' : ''}${OPEN.has(d.celular) ? ' open' : ''}" data-k="${esc(d.celular)}">
     <div class="sum" data-t>
       <div class="top"><span class="nb">${i}</span>
-        <div class="who"><b>${esc(d.nombre)}</b><span class="num">${IC.phone}${esc(d.celular)}${d.ojo ? '<span class="pri">OJO</span>' : ''}</span></div>
+        <div class="who"><b>${esc(d.nombre)}</b><span class="num">${IC.phone}${esc(d.celular)}${PLANES.includes(d.plan) ? `<span class="plt">${esc(d.plan)}</span>` : ''}${d.ojo ? '<span class="pri">OJO</span>' : ''}</span></div>
         <span class="stp" style="--c:${COL[ok(d)]}"><i class="dot"></i>${esc(LBL[ok(d)])}</span><span class="chev">${IC.chev}</span></div>
-      <div class="On"><span class="tg">OBS:</span><span class="ob${obs ? '' : ' nil'}">${obs ? esc(obs) : '-'}</span></div>
+      <div class="os"><span class="tg">OBS:</span><span class="ob${obs ? '' : ' nil'}">${obs ? esc(obs) : '-'}</span></div>
       <div class="ln">${IC.pin}<span class="tg">Ubi:</span><span class="co${coord ? '' : ' nil'}">${coord ? esc(coord) : '-'}</span>${coord ? `<button type="button" class="cp" data-copy="${esc(coord)}" aria-label="Copiar coordenadas">${IC.copy}Copiar</button>` : ''}</div>
       <div class="wrow"><a class="wa" data-wa="${esc(d.celular)}" target="_blank" rel="noopener" href="${waLink(esc(d.celular))}"><img src="whatsapp.png" class="wa-logo" alt="">WhatsApp</a><span class="wc" data-wc="${esc(d.celular)}">${wtxt(n)}</span></div>
     </div>
@@ -274,7 +277,7 @@ function renderPend() {
   bar.textContent = Q.length ? `${Q.length} referido(s) en espera de envío · toca para ver` : '';
   box.innerHTML = Q.length ? `<div class="pqb"><h3>En espera de envío (${Q.length})</h3>
     <p>No se subieron por falta de internet. Se enviarán solos al volver la señal.</p>` +
-    Q.map(q => `<div class="pi"><div class="pt"><b>${esc(String(q.reg.nombre).toUpperCase())}</b> · ${esc(q.reg.celular)}<small>${esc(LBL[q.reg.estado] || 'Sin estado')}${q.reg.observacion ? ' · ' + esc(q.reg.observacion) : ''}</small></div>
+    Q.map(q => `<div class="pi"><div class="pt"><b>${esc(String(q.reg.nombre).toUpperCase())}</b> · ${esc(q.reg.celular)}<small>${esc(LBL[q.reg.estado] || 'Sin estado')}${q.reg.plan ? ' · ' + esc(q.reg.plan) : ''}${q.reg.observacion ? ' · ' + esc(q.reg.observacion) : ''}</small></div>
       <div class="acts"><button data-qs>Enviar ahora</button><button data-qe="${q.ts}" aria-label="Editar">${IC.edit}</button><button data-qd="${q.ts}" aria-label="Descartar">${IC.trash}</button></div></div>`).join('') + '</div>' : '';
 }
 
@@ -356,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('b-sync').onclick = load;
   $('b-out').onclick = () => { if ((Q.length || QW.length || QE.length) && !confirm(`Hay ${Q.length + QE.length} cambio(s) en espera sin enviar que se perderán. ¿Salir?`)) return; Q = []; QW = []; QE = []; W('queue', Q); W('waq', QW); W('eyeq', QE); logout(); };
   document.querySelectorAll('nav button').forEach(b => b.onclick = () => nav(b.dataset.v));
-  $('est').onclick = e => { const b = e.target.closest('[data-s]'); if (b) setEst(b.dataset.s); };
+  $('plan').onclick = e => { const b = e.target.closest('[data-p]'); if (b) setPlan(plan === b.dataset.p ? '' : b.dataset.p); };
   $('b-gps').onclick = gps; $('f').onsubmit = submit; $('b-cancel').onclick = resetForm; $('b-del').onclick = del;
   ['q', 'fo', 'fp', 'fv'].forEach(id => $(id).oninput = renderList);
   ['fd', 'd1', 'd2'].forEach(id => $(id).onchange = renderList);
